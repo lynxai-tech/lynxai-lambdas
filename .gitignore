@@ -1,2 +1,5 @@
 .env
 .tool
+__pycache__
+*.zip
+venv
