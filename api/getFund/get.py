@@ -23,11 +23,9 @@ def lambda_handler(event, context):
         ON if2.main_fund_id = i.id
       LEFT JOIN `schema`.investment_detail id
         ON id.fund_id = if2.id
-     WHERE u.name = (:clientName)
+     WHERE u.name = 'lynxai'
        AND i.date = if2.date
      GROUP BY if2.id;
-    """, {'clientName': event.query('clientName')}).list()
-    
-    print(res)
+    """).list()
 
     return res
