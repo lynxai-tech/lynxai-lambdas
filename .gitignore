@@ -1,5 +1,6 @@
 .env
 .tool
-__pycache__
+**/__pycache__
 *.zip
 venv
+**/.DS_Store
