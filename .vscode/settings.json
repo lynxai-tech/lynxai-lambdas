@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./layers/shared",
+        "./layers/shared"
+    ]
+}

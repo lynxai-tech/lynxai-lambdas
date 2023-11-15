@@ -3,29 +3,37 @@ from main import *
 
 @lynx()
 def lambda_handler(event, context):
-    res = event.select("""
-    SELECT i.id,
-           i.date,
-           if2.id if_id,
-           i.fund_name,
-           i.fund_type,
-           i.eu_sfdr_article,
-           i.country,
-           i.status,
-           i.amount,
-           i.portfolio_weight_percentage,
-           i.client_id,
-           COUNT(id.asset_id) nr_assets
-      FROM `schema`.main_fund i
-      JOIN `schema`.client u
-        ON u.id = i.client_id
-      JOIN `schema`.investment_fund if2
-        ON if2.main_fund_id = i.id
-      LEFT JOIN `schema`.investment_detail id
-        ON id.fund_id = if2.id
-     WHERE u.name = 'lynxai'
-       AND i.date = if2.date
-     GROUP BY if2.id;
-    """).list()
+    fund_name = event.query('fundName')
+    client_name = event.query('clientName')
 
-    return res
+    fund = get_fund(event, fund_name, client_name)
+
+    latest_investment_fund = get_latest_investment_fund_by_get_fund(fund)
+
+    latest_investment_fund_assets = latest_investment_fund.get('assets', [])
+
+    number_assets_history = {
+        'value_private': len([item for item in latest_investment_fund_assets if item.get('public_asset') in ['Private', '0']]),
+        'value_public': len([item for item in latest_investment_fund_assets if item.get('public_asset') in ['Public', '1']])
+    }
+
+    amount = sum([float(asset.get('nominal_amount', 0))
+                 for asset in latest_investment_fund_assets]) or 0
+    
+    print(67)
+
+    mapped_countries = map_countries_in_fund_asset(
+        filter_countries(latest_investment_fund_assets))
+    
+    print(45)
+
+    return {
+        'weight_percentage': fund.get('portfolio_weight_percentage', ''),
+        'number_assets_history': number_assets_history,
+        'nominal_amount_history': amount,
+        'countries_count_list': parse_countries_count_list(mapped_countries),
+        'countries_amount_list': parse_countries_amount_list(mapped_countries, amount),
+        'assets_industry_list': parse_types_list(latest_investment_fund_assets, 'financial_industry'),
+        'asset_type_list': parse_types_list(latest_investment_fund_assets, 'asset_type'),
+        'assets_list': fund.get('fund_history', [])
+    }
