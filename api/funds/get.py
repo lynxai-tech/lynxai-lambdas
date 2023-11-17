@@ -3,10 +3,10 @@ from main import *
 
 @lynx()
 def lambda_handler(event, context):
-    fund_name = event.query('fundName')
+    fund_id = event.query('fundId')
     client_name = event.query('clientName')
 
-    fund = get_fund(event, fund_name, client_name)
+    fund = get_fund(event, fund_id, client_name)
 
     latest_investment_fund = get_latest_investment_fund_by_get_fund(fund)
 
@@ -28,6 +28,8 @@ def lambda_handler(event, context):
     print(45)
 
     return {
+        'id': fund.get('id', ''),
+        'fund_name': fund.get('fund_name', ''),
         'weight_percentage': fund.get('portfolio_weight_percentage', ''),
         'number_assets_history': number_assets_history,
         'nominal_amount_history': amount,
