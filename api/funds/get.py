@@ -19,13 +19,9 @@ def lambda_handler(event, context):
 
     amount = sum([float(asset.get('nominal_amount', 0))
                  for asset in latest_investment_fund_assets]) or 0
-    
-    print(67)
 
     mapped_countries = map_countries_in_fund_asset(
         filter_countries(latest_investment_fund_assets))
-    
-    print(45)
 
     return {
         'weight_percentage': fund.get('portfolio_weight_percentage', ''),
