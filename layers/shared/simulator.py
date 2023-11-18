@@ -5,7 +5,16 @@ class Simulator:
     def __init__(self, event):
         self.event = event
 
-    def create_unnamed_simulation(self, fund_id, prefix="Unnamed simulation "):
+    def get_client_id(self, client_name):
+        return self.event.select("""
+        SELECT id
+        FROM `schema`.client
+        WHERE name = (:clientName)
+        """, {
+            'clientName': client_name
+        }).val()
+
+    def create_unnamed_simulation(self, fund_id, prefix="Unnamed simulation ", client_id=None):
         res = self.event.select(f"""
         SELECT fund_name
         FROM `schema`.main_fund
@@ -17,14 +26,15 @@ class Simulator:
                            for x in res]) if res else 0
 
         res = self.event.change("""
-        INSERT INTO `schema`.main_fund (fund_name, lastModifiedOn, isSimulation, simulatedMainFundId, isDraft)
-        VALUES (:fund_name, :lastModifiedOn, :isSimulation, :simulatedMainFundId, :isDraft)
+        INSERT INTO `schema`.main_fund (fund_name, client_id, lastModifiedOn, isSimulation, simulatedMainFundId, isDraft)
+        VALUES (:fund_name, :clientId, :lastModifiedOn, :isSimulation, :simulatedMainFundId, :isDraft)
         """, {
             'fund_name': f'{prefix}{max_unnamed+1}',
             'lastModifiedOn': datetime.utcnow(),
             'isSimulation': True,
             'simulatedMainFundId': fund_id,
-            'isDraft': True
+            'isDraft': True,
+            'clientId': client_id
         })
 
         simulation_id = res['generatedFields'][0]['longValue']
@@ -64,7 +74,10 @@ class Simulator:
         def transform_asset(asset):
             return asset | {'fund_id': to}
 
-        self.event.change("""
-        INSERT INTO `schema`.investment_detail (fund_id, asset_id, investment_type, nominal_amount, portfolio_asset_weight_non_financial, date, currency, share_amount)
-        VALUES (:fund_id, :asset_id, :investment_type, :nominal_amount, :portfolio_asset_weight_non_financial, :date, :currency, :share_amount)
-        """, [transform_asset(x) for x in assets if x['id'] is not None])
+        assets = [transform_asset(x) for x in assets if x['id'] is not None]
+
+        if assets:
+            self.event.change("""
+            INSERT INTO `schema`.investment_detail (fund_id, asset_id, investment_type, nominal_amount, portfolio_asset_weight_non_financial, date, currency, share_amount)
+            VALUES (:fund_id, :asset_id, :investment_type, :nominal_amount, :portfolio_asset_weight_non_financial, :date, :currency, :share_amount)
+            """, assets)
