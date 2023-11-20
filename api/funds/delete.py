@@ -1,19 +1,19 @@
 from main import *
 
 
-
 @lynx()
 def lambda_handler(event, context):
-  
+
+    fund_id_dict = {'fund_id': event.query('fundId')}
     
-    res = event.call('`schema`.delete_funds',{'fundName': event.query('fundName')})
-    # mainFundId = event.select("""SELECT id FROM `schema`.main_fund WHERE fund_name = (:fundName) LIMIT 1;""",{'fundName': event.query('fundName')}).list()
-  
+    event.change("""DELETE `schema`.investment_detail FROM `schema`.investment_detail
+                    INNER JOIN `schema`.investment_fund ON investment_detail.fund_id = investment_fund.id
+                    WHERE investment_fund.main_fund_id = (:fund_id) 
+                    AND investment_detail.fund_id IN (SELECT id FROM `schema`.investment_fund WHERE main_fund_id = (:fund_id))""",
+                    fund_id_dict)
     
-    # print(res)
+    event.change("DELETE FROM `schema`.investment_fund WHERE main_fund_id =  (:fund_id)", fund_id_dict)
     
-    return res
-  
-  
-  
-  
+    event.change("DELETE FROM `schema`.main_fund WHERE id =(:fund_id)", fund_id_dict)
+    
+    return 'Sucess'

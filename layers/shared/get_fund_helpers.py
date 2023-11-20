@@ -1,6 +1,6 @@
 from fund_dictionaries import dictionary_countries, dictionary_asset_types, dictionary_investment_types
 
-def get_fund_info(event, client_name, fund_name):
+def get_fund_info(event, client_name, fund_id):
     return event.select("""
     SELECT
         i.id,
@@ -23,11 +23,11 @@ def get_fund_info(event, client_name, fund_name):
     ON id.fund_id = if2.id
     WHERE
         u.name = (:client_name)
-        AND i.fund_name = (:fund_name)
+        AND i.id = (:fund_id)
         AND i.date = if2.date
     GROUP BY
         if2.id;
-    """, {'client_name': client_name, 'fund_name': fund_name}).list()
+    """, {'client_name': client_name, 'fund_id': fund_id}).list()
 
 
 def get_fund(event, fund_name, client_name):
