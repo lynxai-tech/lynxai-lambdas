@@ -18,7 +18,7 @@ def lambda_handler(event, context):
                      'status':  event_body['status'],
                      'amount':  event_body['amount'],
                      'portfolio_weight_percentage':  event_body['portfolioWeightPercentage'],
-                     'fund_id': fund_id
+                     'fund_id': event_body['fundId']
                  })
     
     
