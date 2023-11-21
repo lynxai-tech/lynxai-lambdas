@@ -7,8 +7,6 @@ def lambda_handler(event, context):
 
     asset_info = event.select(
         "SELECT * FROM `schema`.asset WHERE id = (:asset_id)", {'asset_id': asset_id}).list()[0]
-    
-    print({'asset': asset_info})
 
     investment_detail_info = get_investment_details_info(event, asset_id)
     
@@ -39,7 +37,6 @@ def get_investment_details_info(event, asset_id):
                                             WHERE ID.asset_id = (:asset_id)""",
                                            {'asset_id': asset_id}).list()
     
-    print(asset_info_in_fund_list)
     
     return asset_info_in_fund_list
 
