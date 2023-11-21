@@ -33,15 +33,9 @@ def get_fund_info(event, client_name, fund_id):
 def get_fund(event, fund_name, client_name):
     fund = get_fund_info(event, client_name, fund_name)[0]
 
-    print(fund)
-
     fund_history = get_fund_history(event, fund.get('id'))
 
-    print(4)
-
     fund['fund_history'] = fund_history
-
-    print(5)
 
     return fund
 
@@ -50,17 +44,12 @@ def get_fund_history(event, main_fund_id):
     investment_fund_list = event.select("SELECT id, date, amount FROM `schema`.investment_fund WHERE main_fund_id = (:main_fund_id)", {
                                         'main_fund_id': main_fund_id}).list()
 
-    print(investment_fund_list)
-
-    print(1)
 
     fund_history = [{'date': item.get('date'),
                      'amount': item.get('amount'),
                      'assets': get_assets_for_investment_fund(event, item.get('id'))
                      } for item in investment_fund_list]
-    print(2)
 
-    # print({'fund_history':fund_history})
 
     return fund_history
 
@@ -72,8 +61,6 @@ def get_assets_for_investment_fund(event, fund_id):
     JOIN `schema`.investment_fund f ON f.id = id.fund_id
     WHERE f.id = (:fund_id)""", {'fund_id': fund_id}).list()
 
-    print(3)
-    # print(assets)
 
     return assets
 
@@ -165,3 +152,29 @@ def parse_countries_amount_list(countries_list, total_amount):
     ]
 
     return result
+
+
+def build_get_fund_response(fund, latest_investment_fund_assets):
+    number_assets_history = {
+        'value_private': len([item for item in latest_investment_fund_assets if item.get('public_asset') in ['Private', '0']]),
+        'value_public': len([item for item in latest_investment_fund_assets if item.get('public_asset') in ['Public', '1']])
+    }
+
+    amount = sum([float(asset.get('nominal_amount', 0))
+                 for asset in latest_investment_fund_assets]) or 0
+    
+    mapped_countries = map_countries_in_fund_asset(
+        filter_countries(latest_investment_fund_assets))
+    
+    return {
+        'id': fund.get('id', ''),
+        'fund_name': fund.get('fund_name', ''),
+        'weight_percentage': fund.get('portfolio_weight_percentage', ''),
+        'number_assets_history': number_assets_history,
+        'nominal_amount_history': amount,
+        'countries_count_list': parse_countries_count_list(mapped_countries),
+        'countries_amount_list': parse_countries_amount_list(mapped_countries, amount),
+        'assets_industry_list': parse_types_list(latest_investment_fund_assets, 'financial_industry'),
+        'asset_type_list': parse_types_list(latest_investment_fund_assets, 'asset_type'),
+        'assets_list': fund.get('fund_history', [])
+    }
