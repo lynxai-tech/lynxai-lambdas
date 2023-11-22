@@ -115,5 +115,7 @@ def get_fund_list(event, client_name):
         ON id.fund_id = if2.id
      WHERE u.name = (:client_name)
        AND i.date = if2.date
+       AND NOT COALESCE(i.isDeleted, FALSE)
+       AND NOT COALESCE(i.isSimulation, FALSE)
      GROUP BY if2.id;
     """, {'client_name': client_name}).list()
