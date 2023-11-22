@@ -68,7 +68,7 @@ def get_assets_for_investment_fund(event, fund_id):
 def parse_types_list(types_list, property_key):
     count_map = {}
     for curr in types_list:
-        value = getattr(curr, property_key, None)
+        value = curr[property_key]
         if value:
             count_map[value] = count_map.get(value, 0) + 1
 
@@ -76,7 +76,7 @@ def parse_types_list(types_list, property_key):
         {
             'label': name,
             'count': count,
-            'value': sum(float(asset.nominal_amount) for asset in types_list if getattr(asset, property_key) == name),
+            'value': sum(float(asset.get('nominal_amount', 0)) for asset in types_list if asset.get(property_key) == name),
         }
         for name, count in count_map.items()
     ]
@@ -175,6 +175,6 @@ def build_get_fund_response(fund, latest_investment_fund_assets):
         'countries_count_list': parse_countries_count_list(mapped_countries),
         'countries_amount_list': parse_countries_amount_list(mapped_countries, amount),
         'assets_industry_list': parse_types_list(latest_investment_fund_assets, 'financial_industry'),
-        'asset_type_list': parse_types_list(latest_investment_fund_assets, 'asset_type'),
+        'asset_type_list': parse_types_list(map_asset_types_in_fund_asset(latest_investment_fund_assets), 'asset_type'),
         'assets_list': fund.get('fund_history', [])
     }

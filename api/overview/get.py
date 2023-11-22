@@ -7,21 +7,15 @@ def lambda_handler(event, context):
 
     fund_list = get_fund_list(event, client_name)
 
-    print(1)
     fund_analytics_list = []
 
     for fund in fund_list:
         fund_id = fund['id']
-        print(2)
         client_name = event.query('clientName')
-        print(3)
         fund = get_fund(event, fund_id, client_name)
-        print(4)
         latest_investment_fund = get_latest_investment_fund_by_get_fund(fund)
-        print(5)
         latest_investment_fund_assets = latest_investment_fund.get(
             'assets', [])
-        print(6)
         fund_analytics_list.append(build_get_fund_response(
             fund, latest_investment_fund_assets))
 
