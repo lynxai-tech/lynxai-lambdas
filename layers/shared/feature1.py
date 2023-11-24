@@ -8,6 +8,7 @@ def get_latest_investment_fund_by_post_body(data):
 
     return latest_data, latest_date
 
+
 def get_latest_investment_fund_by_get_fund(data):
     return max(data['fund_history'], key=lambda x: x['date'])
 
@@ -31,26 +32,23 @@ def get_asset_list_from_fund_history(data):
 def get_new_assets(data, event):
     asset_list = get_asset_list_from_fund_history(data)
 
-    print({'asset_list': asset_list})
-
     asset_name_list = [{'asset_name': item['name']} for item in asset_list]
 
-    print({'asset_name_list': asset_name_list})
 
-    existing_assets = event.select(
-        "SELECT * FROM `schema`.asset WHERE name IN (:asset_name)", asset_name_list).list()
+    existing_assets = [event.select(
+        "SELECT * FROM `schema`.asset WHERE name = (:asset_name)", item).list()[0] for item in asset_name_list]
 
-    print({'existing_assets': existing_assets})
+
+    existing_assets_name_list = [obj['name'] for obj in existing_assets]
+
 
     new_assets = [item for item in asset_list if item["name"]
-                  not in existing_assets]
-
-    print({'new_assets': new_assets})
+                  not in existing_assets_name_list]
 
     parsed_assets = [{
         'name': item.get('name', ''),
         'ticker': item.get('ticker', ''),
-        'public_asset': item.get('public_asset', ''),
+        'public_asset': item.get('public_asset', None),
         'market_cap': item.get('market_cap', ''),
         'type_of_issuer': item.get('type_of_issuer', ''),
         'financial_industry': item.get('financial_industry', ''),
@@ -60,28 +58,24 @@ def get_new_assets(data, event):
         'isSynced': 0
     } for item in new_assets]
 
-    print({'parsed_assets': parsed_assets})
-
     return parsed_assets
 
 
 def get_investment_details(event_body, main_fund_id, event):
     investment_fund_list = event.select(
-        "SELECT id, date FROM `schema`.investment_fund WHERE main_fund_id = (:main_fund_id)", {'main_fund_id': main_fund_id})
-    print(investment_fund_list)
+        "SELECT id, date FROM `schema`.investment_fund WHERE main_fund_id = (:main_fund_id)", {'main_fund_id': main_fund_id}).list()
 
-    asset_list = []
-
-    for entries in event_body["fundHistory"].items():
-        for entry in entries:
-            asset_list.append(entry)
-
-    date_to_id_mapping = {fund['date']: fund['id']
-                          for fund in investment_fund_list}
+    asset_list = [
+        {**item, 'fund_id': fund['id']}
+        for date, funds in event_body['fundHistory'].items()
+        for fund in investment_fund_list
+        if date == fund['date']
+        for item in funds
+    ]
 
     parsed_investment_details = [{
-        'fund_id': date_to_id_mapping[item['date']],
-        'asset_id': item.get('id', ''),
+        'fund_id': item.get('fund_id', ''),
+        'asset_id': event.select("SELECT id FROM `schema`.asset WHERE name = (:asset_name)", {'asset_name': item.get('name', '')}).val(),
         'investment_type': item.get('investment_type', ''),
         'currency': item.get('currency', ''),
         'nominal_amount': item.get('nominal_amount', ''),
@@ -119,3 +113,21 @@ def get_fund_list(event, client_name):
        AND NOT COALESCE(i.isSimulation, FALSE)
      GROUP BY if2.id;
     """, {'client_name': client_name}).list()
+
+
+# def convert_to_mysql_date(date_str):
+#     parts = date_str.split('/')
+#     return f"{parts[2]}-{parts[0].zfill(2)}-{parts[1].zfill(2)}"
+
+
+def get_parsed_event_body(data):
+    return {
+        "clientName": data["clientName"],
+        "fundName": data["fundName"],
+        "fundType": data["fundType"],
+        "country": data["country"],
+        "fundHistory": {
+            '-'.join(date.split('/')[::-1]): value
+            for date, value in data["fundHistory"].items()
+        }
+    }

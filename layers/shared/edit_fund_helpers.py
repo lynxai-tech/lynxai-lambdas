@@ -1,4 +1,4 @@
-def delete_date_list(event):
+def remove_deleted_fund_versions(event):
 
     event_body = event.body()
     fund_id = event_body['fundId']
