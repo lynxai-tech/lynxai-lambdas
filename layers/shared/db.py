@@ -141,7 +141,7 @@ class SDB:
                 try:
                     parameters[name]
                 except (KeyError, TypeError):
-                    raise QueryParameterMismatch
+                    raise QueryParameterMismatch(f"""parameter {name}""")
 
                 for f in (int, float, bool, datetime):
                     try:
@@ -264,15 +264,15 @@ class SDB:
 
         cursor.close()
         return RDSResultSet(data)
-    
-    
+
+
     @retry
     def call(self, sql, parameters=None, cursor=None):
         if cursor is None:
             cursor = SDB.create_cursor(self.connection)
 
         if isinstance(parameters, dict) or not parameters:
-            
+
             parametersTuple = tuple(parameters.values())
             print(parametersTuple)
             n = cursor.callproc(sql, parametersTuple)
@@ -300,7 +300,7 @@ class SDB:
                 "Parameters must be either a dict or a list of dicts.")
 
         self.connection.commit()
-        
+
         cursor.close()
         return RDSResultSet(data)
     @retry
@@ -310,7 +310,7 @@ class SDB:
 
         if isinstance(parameters, dict) or not parameters:
             n = self._query(sql, parameters, cursor=cursor, multi=multi)
-            
+
             print(n)
 
             if enforce:
