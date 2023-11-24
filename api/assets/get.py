@@ -4,6 +4,8 @@ from main import *
 @lynx()
 def lambda_handler(event, context):
     asset_id = event.query('assetId')
+    
+    # get_stock_value('EUR')
 
     asset_info = event.select(
         "SELECT * FROM `schema`.asset WHERE id = (:asset_id)", {'asset_id': asset_id}).list()[0]

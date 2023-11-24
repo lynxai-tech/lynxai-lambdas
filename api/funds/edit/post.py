@@ -6,7 +6,7 @@ def lambda_handler(event, context):
 
     event_body = event.body()
     
-    delete_date_list(event)
+    remove_deleted_fund_versions(event)
     
     edit_fund(event)
 
