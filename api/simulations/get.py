@@ -7,12 +7,15 @@ def lambda_handler(event, context):
 
     # get the simulation assets
     res = event.select("""
-    SELECT F.isDraft, F.fund_name AS name, F.simulatedMainFundId, ID.*
+    SELECT F.isDraft, F.fund_name AS name, F.simulatedMainFundId, ID.*, A.name AS assetName
       FROM `schema`.main_fund F
       LEFT JOIN `schema`.investment_fund IVF
         ON IVF.main_fund_id = F.id
       LEFT JOIN `schema`.investment_detail ID
         ON ID.fund_id = IVF.id
+      LEFT JOIN `schema`.asset A
+        ON A.id = ID.asset_id
+
      WHERE F.id = (:mainFundId)
     """, {
         'mainFundId': simulation_id
@@ -32,10 +35,12 @@ def lambda_handler(event, context):
 
     # get the actual assets
     actuals = event.select("""
-    SELECT ID.*
+    SELECT ID.*, A.name AS assetName
       FROM `schema`.investment_fund IVF
       LEFT JOIN `schema`.investment_detail ID
         ON ID.fund_id = IVF.id
+      LEFT JOIN `schema`.asset A
+        ON A.id = ID.asset_id
      WHERE IVF.id = (:simulatedFundId)
     """, {
         'simulatedFundId': snapshot_id
