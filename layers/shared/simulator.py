@@ -20,8 +20,9 @@ class Simulator:
         FROM `schema`.main_fund
         WHERE isSimulation
         AND fund_name LIKE '{prefix}%'
+        AND not fund_name LIKE '{prefix}% | Copy%'
         """).list()
-
+        print(res)
         max_unnamed = max([int(x['fund_name'].replace(prefix, '').strip())
                            for x in res]) if res else 0
 
@@ -78,6 +79,6 @@ class Simulator:
 
         if assets:
             self.event.change("""
-            INSERT INTO `schema`.investment_detail (fund_id, asset_id, investment_type, nominal_amount, portfolio_asset_weight_non_financial, date, currency, share_amount)
-            VALUES (:fund_id, :asset_id, :investment_type, :nominal_amount, :portfolio_asset_weight_non_financial, :date, :currency, :share_amount)
+            INSERT INTO `schema`.investment_detail (fund_id, asset_id, investment_type, nominal_amount, portfolio_asset_weight_non_financial, date, currency, share_amount, startDate, endDate)
+            VALUES (:fund_id, :asset_id, :investment_type, :nominal_amount, :portfolio_asset_weight_non_financial, :date, :currency, :share_amount, :startDate, :endDate)
             """, assets)

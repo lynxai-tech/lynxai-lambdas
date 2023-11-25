@@ -81,7 +81,7 @@ class SDB:
 
     @staticmethod
     def _create_connection(username, password, key=None):
-        host = os.environ.get('DB_ENDPOINT' + '' if key is None else f'_{key}')
+        host = os.environ.get('DB_ENDPOINT' + ('' if key is None else f'_{key}'))
 
         args = {
             'host': host,
@@ -101,7 +101,7 @@ class SDB:
     def _read_credentials(key=None):
         m = hashlib.sha256()
         m.update((os.environ.get('RDS_SECRET_NAME') +
-                 '' if key is None else f'_{key}').encode())
+                 ('' if key is None else f'_{key}')).encode())
         s3_digest = m.hexdigest()
         if os.environ.get('AWS_LAMBDA_FUNCTION_VERSION'):
             s3_digest = Path('/tmp') / s3_digest
@@ -109,13 +109,13 @@ class SDB:
             with open(s3_digest, 'r') as f:
                 return json.loads(f.read())
         else:
-            return SDB._retrieve_credentials()
+            return SDB._retrieve_credentials(key=key)
 
     @staticmethod
     def _write_credentials(username, password, key=None):
         m = hashlib.sha256()
         m.update((os.environ.get('RDS_SECRET_NAME') +
-                 '' if key is None else f'_{key}').encode())
+                 ('' if key is None else f'_{key}')).encode())
         s3_digest = m.hexdigest()
         if os.environ.get('AWS_LAMBDA_FUNCTION_VERSION'):
             s3_digest = Path('/tmp') / s3_digest
@@ -126,8 +126,9 @@ class SDB:
     def _retrieve_credentials(key=None):
         ssm = boto3.client(service_name='secretsmanager', config=Config(
             region_name=os.environ.get('SECRETS_REGION', os.environ.get('AWS_REGION', 'us-east-2'))))
+        print('secret name', 'RDS_SECRET_NAME' + ('' if key is None else f'_{key}'))
         creds = ssm.get_secret_value(
-            SecretId=os.environ.get('RDS_SECRET_NAME') + '' if key is None else f'_{key}')
+            SecretId=os.environ.get('RDS_SECRET_NAME' + ('' if key is None else f'_{key}')))
         username = json.loads(creds['SecretString'])['username']
         password = json.loads(creds['SecretString'])['password']
         SDB._write_credentials(username, password, key=key)

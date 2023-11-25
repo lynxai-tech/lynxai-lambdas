@@ -1,0 +1,68 @@
+financial_industry,suffix,name,exposure,emissions,emissionsPerYearPerEuroTCO2,startDate,endDate,asset_type
+Commercial Real Estate - Residencial,CRE RESI,A,489161,  4.0 ,0.0000082091968,2022-01-01,2023-05-05,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,B,777951,  42.2 ,0.00005421159875,2022-01-01,2028-04-10,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,C,26243,  0.1 ,0.000002201954689,2022-01-01,2028-04-10,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,D,118178,  0.9 ,0.000007330379104,2022-01-01,2023-07-11,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,E,20751,  0.1 ,0.000006561219512,2022-01-01,2026-07-06,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,F,182703,  0.6 ,0.000003028077074,2022-01-01,2031-03-23,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,G,28424,  0.2 ,0.000008021103896,2022-01-01,2019-01-14,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,H,27287,  0.2 ,0.00000891456,2022-01-01,2019-01-14,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,I,1074081,  0.9 ,0.000000821137646,2022-01-01,2018-09-14,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,J,110000,  1.2 ,0.00001089557333,2022-01-01,2024-03-16,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,K,69600,  0.9 ,0.00001364927586,2022-01-01,2024-09-12,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,L,144000,  1.4 ,0.000009492355556,2022-01-01,2024-08-31,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,M,46991,  0.5 ,0.00001060331387,2022-01-01,2028-09-03,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,N,15714,  3.3 ,0.000212166528,2022-01-01,2025-01-26,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,O,139026,  1.0 ,0.000007321178403,2022-01-01,2027-02-06,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,P,260417,  1.1 ,0.0000043978496,2022-01-01,2031-08-04,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,Q,250932,  1.1 ,0.000004369680169,2022-01-01,2012-03-27,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,R,663254,  2.1 ,0.000003183771429,2022-01-01,2032-09-11,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,S,119492,  0.7 ,0.000006120171674,2022-01-01,2017-06-30,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,U,11021,  0.0 ,0.000004193693214,2022-01-01,2025-06-18,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,V,68700,  0.9 ,0.00001316924483,2022-01-01,2023-09-25,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,X,69127,  0.6 ,0.00000891456,2022-01-01,2023-04-23,alternative_investments
+Commercial Real Estate - Residencial,CRE RESI,Z,285000,  0.7 ,0.000002571215827,2022-01-01,2030-10-16,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,A,9357, 2.4 ,0.000256495755,2022-01-01,2025-04-12,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,B,25762,  355.7 ,0.0001380404144,2022-01-01,2033-05-20,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,C,250000, 59.8 ,0.0002392,2022-01-01,2032-12-22,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,D,11184,  46.2 ,0.00004129336779,2022-01-01,2029-12-02,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,E,296456, 32.1 ,0.0001082792545,2022-01-01,2029-12-02,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,F,117396, 3.9 ,0.00003322076627,2022-01-01,2029-12-02,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,G,112653, 12.2 ,0.0001082970081,2022-01-01,2029-12-02,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,H,180245, 19.5 ,0.0001081860481,2022-01-01,2029-12-02,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,I,72928, 10.3 ,0.0001412350026,2022-01-01,2029-12-02,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,J,90123, 6.0 ,0.00006657602958,2022-01-01,2029-12-02,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,K,19959, 1.5 ,0.00007515432099,2022-01-01,2023-05-10,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,L,20205, 1.9 ,0.00009403455285,2022-01-01,2023-05-10,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,M,33265, 2.5 ,0.00007515432099,2022-01-01,2023-05-10,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,N,26612, 2.0 ,0.00007515432099,2022-01-01,2023-05-10,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,O,19959, 1.5 ,0.00007515432099,2022-01-01,2023-05-10,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,P,54457, 7.6 ,0.0001395605495,2022-01-01,2030-11-09,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,Q,75297, 6.7 ,0.00008898055509,2022-01-01,2024-12-17,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,R,43154, 5.0 ,0.0001158638998,2022-01-01,2023-05-04,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,S,5484, 1.1 ,0.0002005864418,2022-01-01,2022-10-04,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,U,420000, 15.7 ,0.00003738095238,2022-01-01,2023-05-06,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,V,25436, 1.9 ,0.00007469680958,2022-01-01,2027-12-10,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,X,219136, 7.5 ,0.00003422534469,2022-01-01,2029-12-04,alternative_investments
+Commercial Real Estate - Serviços,CRE SERV,Z,479677, 19.3 ,0.00004023540925,2022-01-01,2018-02-15,alternative_investments
+Produção de Eletricidade,ELETR,A,45861540, 2018 ,0.00004401245941,2022-01-01,2100-12-31,commodities
+Produção de Eletricidade,ELETR,B,40307771, 25507 ,0.0006328156783,2022-01-01,2029-07-25,commodities
+Produção de Eletricidade,ELETR,C,38757625, 18907 ,0.0004878318602,2022-01-01,2028-05-11,commodities
+Produção de Eletricidade,ELETR,D,37672985, 6373 ,0.0001691568445,2022-01-01,2024-11-09,commodities
+Produção de Eletricidade,ELETR,E,32094538, 11013 ,0.0003431276804,2022-01-01,2027-04-15,commodities
+Produção de Eletricidade,ELETR,F,21018885, 5618 ,0.0002672615646,2022-01-01,2026-06-28,commodities
+Produção de Eletricidade,ELETR,G,13474457, 1338 ,0.00009931487106,2022-01-01,2033-06-29,commodities
+Produção de Eletricidade,ELETR,H,9987170, 1185,0.0001186447322,2022-01-01,2023-01-25,commodities
+Produção de Eletricidade,ELETR,I,9793016, 1163,0.0001187192398,2022-01-01,2033-06-27,commodities
+Produção de Eletricidade,ELETR,J,5042693, 2952,0.0005853442576,2022-01-01,2023-02-27,commodities
+Produção de Eletricidade,ELETR,K,5029406,331 ,0.00006583452044,2022-01-01,2025-03-16,commodities
+Produção de Eletricidade,ELETR,L,3622074,383 ,0.0001058036098,2022-01-01,2033-06-27,commodities
+Produção de Eletricidade,ELETR,M,2117616,320 ,0.0001509378355,2022-01-01,2026-06-29,commodities
+Produção de Eletricidade,ELETR,N,1800145,161 ,0.00008932722174,2022-01-01,2037-09-30,commodities
+Produção de Eletricidade,ELETR,O,1763727,330 ,0.0001873377571,2022-01-01,2026-06-29,commodities
+Produção de Eletricidade,ELETR,P,1737290,80 ,0.00004607039006,2022-01-01,2025-02-18,commodities
+Produção de Eletricidade,ELETR,Q,1592694,142 ,0.00008932722174,2022-01-01,2023-03-30,commodities
+Produção de Eletricidade,ELETR,R,1182962,178 ,0.000150174882,2022-01-01,2026-06-29,commodities
+Fabricação de Cimento,CIM,X,76286693,439345,0.005759130233,2022-01-01,2027-04-29,commodities
+Fabricação de Cimento,CIM,Y,16999805,9846,0.0005791545603,2022-01-01,2025-05-06,commodities
+Fabricação de Cimento,CIM,Z,15110938,7899,0.000522747152,2022-01-01,2025-05-06,commodities

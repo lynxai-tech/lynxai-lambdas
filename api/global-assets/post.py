@@ -16,8 +16,8 @@ def lambda_handler(event, context):
     d = event.body()
 
     res = event.change("""
-    INSERT INTO `schema`.asset (name, ticker, public_asset, financial_industry, country, asset_type, isin, emissionsPerYearTCO2)
-    VALUES (:name, :ticker, :public_asset, :financial_industry, :country, :asset_type, :isin, :emissionsPerYearTCO2)
+    INSERT INTO `schema`.asset (name, ticker, public_asset, financial_industry, country, asset_type, isin, emissionsPerYearPerEuroTCO2)
+    VALUES (:name, :ticker, :public_asset, :financial_industry, :country, :asset_type, :isin, :emissionsPerYearPerEuroTCO2)
     """, {
         'name': d.get('name'),
         'ticker': d.get('ticker'),
@@ -26,7 +26,7 @@ def lambda_handler(event, context):
         'country': d.get('country'),
         'asset_type': d.get('assetType'),
         'isin': d.get('isin'),
-        'emissionsPerYearTCO2': d.get('emissionsPerYearTCO2')
+        'emissionsPerYearPerEuroTCO2': d.get('emissionsPerYearPerEuroTCO2')
     })
 
     return {

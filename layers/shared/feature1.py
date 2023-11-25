@@ -87,7 +87,7 @@ def get_investment_details(event_body, main_fund_id, event):
 
 
 def get_fund_list(event, client_name):
-    return event.select("""
+    res = event.select("""
     SELECT i.id,
            i.date,
            if2.id if_id,
@@ -114,6 +114,11 @@ def get_fund_list(event, client_name):
      GROUP BY if2.id;
     """, {'client_name': client_name}).list()
 
+    maxxes = {
+        y: max([x['if_id'] for x in res if x.get('id') == y]) for y in set([x.get('id') for x in res])
+    }
+
+    return [x for x in res if x.get('if_id') == maxxes.get(x.get('id'))]
 
 # def convert_to_mysql_date(date_str):
 #     parts = date_str.split('/')
