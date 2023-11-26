@@ -79,6 +79,6 @@ class Simulator:
 
         if assets:
             self.event.change("""
-            INSERT INTO `schema`.investment_detail (fund_id, asset_id, investment_type, nominal_amount, portfolio_asset_weight_non_financial, date, currency, share_amount, startDate, endDate)
-            VALUES (:fund_id, :asset_id, :investment_type, :nominal_amount, :portfolio_asset_weight_non_financial, :date, :currency, :share_amount, :startDate, :endDate)
+            INSERT INTO `schema`.investment_detail (fund_id, asset_id, investment_type, nominal_amount, portfolio_asset_weight_non_financial, date, currency, share_amount, startDate, endDate, isClone)
+            VALUES (:fund_id, :asset_id, :investment_type, :nominal_amount, :portfolio_asset_weight_non_financial, :date, :currency, :share_amount, :startDate, :endDate, 1)
             """, assets)

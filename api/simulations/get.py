@@ -122,7 +122,7 @@ def lambda_handler(event, context):
 
     # get the simulation assets
     res = event.select("""
-    SELECT F.isDraft, F.fund_name AS name, F.simulatedMainFundId, ID.*, A.name AS assetName, A.emissionsPerYearPerEuroTCO2, financial_industry
+    SELECT F.isDraft, F.fund_name AS name, F.simulatedMainFundId, ID.*, A.name AS assetName, A.emissionsPerYearPerEuroTCO2, financial_industry, isClone
       FROM `schema`.main_fund F
       LEFT JOIN `schema`.investment_fund IVF
         ON IVF.main_fund_id = F.id
@@ -219,7 +219,7 @@ def lambda_handler(event, context):
     ]
 
     chart_data_emissions = [
-        {**x, 'threshold': threshold} if x.get('year') >= 2030 else x for x in chart_data_emissions
+        {**x, 'threshold': threshold if x.get('year') < 2050 else 0} if x.get('year') >= 2030 and x.get('year') <= 2050 else x for x in chart_data_emissions
     ]
 
     return {
@@ -231,5 +231,21 @@ def lambda_handler(event, context):
         'chartData': {
             'percentage': chart_data_percentage,
             'emissions': chart_data_emissions
+        },
+        'achievement': {
+            '2030': {
+                'simulationValue': [x for x in chart_data_emissions if x.get('year') == 2030][0].get('simulation'),
+                'fundValue': [x for x in chart_data_emissions if x.get('year') == 2030][0].get('fund'),
+                'simulationPercentage': [x for x in chart_data_percentage if x.get('year') == 2030][0].get('simulation'),
+                'fundValuePercentage': [x for x in chart_data_percentage if x.get('year') == 2030][0].get('fund'),
+                'threshold': threshold
+            },
+            '2050': {
+                'simulationValue': [x for x in chart_data_emissions if x.get('year') == 2050][0].get('simulation'),
+                'fundValue': [x for x in chart_data_emissions if x.get('year') == 2050][0].get('fund'),
+                'simulationPercentage': [x for x in chart_data_percentage if x.get('year') == 2050][0].get('simulation'),
+                'fundValuePercentage': [x for x in chart_data_percentage if x.get('year') == 2050][0].get('fund'),
+                'threshold': 0
+            }
         }
     }

@@ -15,13 +15,22 @@ from main import *
 def lambda_handler(event, context):
     d = event.body()
 
-    asset_id = d.get('id')
+    asset_id = event.param('id')
     print('asset_id', asset_id)
 
     res = event.change("""
-    INSERT INTO `schema`.asset (name, ticker, public_asset, financial_industry, country, asset_type, isin, emissionsPerYearPerEuroTCO2)
-    VALUES (:name, :ticker, :public_asset, :financial_industry, :country, :asset_type, :isin, :emissionsPerYearPerEuroTCO2)
+    UPDATE `schema`.asset
+       SET name = (:name),
+           ticker = (:ticker),
+           public_asset = (:public_asset),
+           financial_industry = (:financial_industry),
+           country = (:country),
+           asset_type = (:asset_type),
+           isin = (:isin),
+           emissionsPerYearPerEuroTCO2 = (:emissionsPerYearPerEuroTCO2)
+     WHERE id = (:id)
     """, {
+        'id': asset_id,
         'name': d.get('name'),
         'ticker': d.get('ticker'),
         'public_asset': 'Private' if d.get('isPrivate') == 'true' else 'Public' if d.get('isPrivate') == 'true' else None,
@@ -32,6 +41,4 @@ def lambda_handler(event, context):
         'emissionsPerYearPerEuroTCO2': d.get('emissionsPerYearPerEuroTCO2')
     })
 
-    return {
-        'id': res['generatedFields'][0]['longValue']
-    }
+    return True

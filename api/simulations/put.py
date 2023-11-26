@@ -1,11 +1,23 @@
 from main import *
 from datetime import datetime
 
+def update_simulation(db, simulation_id):
+    db.change("""
+    UPDATE `schema`.main_fund
+       SET lastModifiedOn = (:lastModifiedOn)
+     WHERE id = (:fundId)
+    """, {
+        'fundId': simulation_id,
+        'lastModifiedOn': datetime.utcnow().isoformat()
+    })
+
 
 @lynx()
 def lambda_handler(event, context):
     simulation_id = event.param('id')
     end_date = event.param('endDate')
+
+    update_simulation(event.rds, simulation_id)
 
     try:
         simulation_asset_id = event.param("simulationAssetId")
