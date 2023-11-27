@@ -27,7 +27,9 @@ def lambda_handler(event, context):
            country = (:country),
            asset_type = (:asset_type),
            isin = (:isin),
-           emissionsPerYearPerEuroTCO2 = (:emissionsPerYearPerEuroTCO2)
+           emissionsPerYearPerEuroTCO2 = (:emissionsPerYearPerEuroTCO2),
+           esgRiskScore = (:esgRiskScore),
+           epcScore = (:epcScore)
      WHERE id = (:id)
     """, {
         'id': asset_id,
@@ -38,7 +40,9 @@ def lambda_handler(event, context):
         'country': d.get('country'),
         'asset_type': d.get('assetType'),
         'isin': d.get('isin'),
-        'emissionsPerYearPerEuroTCO2': d.get('emissionsPerYearPerEuroTCO2')
+        'emissionsPerYearPerEuroTCO2': d.get('emissionsPerYearPerEuroTCO2'),
+        'esgRiskScore': d.get('esgRiskScore'),
+        'epcScore': d.get('epcScore')
     })
 
     return True

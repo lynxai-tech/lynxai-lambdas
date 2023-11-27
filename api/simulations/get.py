@@ -4,10 +4,10 @@ from datetime import datetime, timedelta
 import csv
 
 THRESHOLDS = {
-    'Produção de Eletricidade': 200000,
-    'Fabricação de Cimento': 200000,
-    'Commercial Real Estate - Residencial': 200000,
-    'Commercial Real Estate - Serviços': 200000
+    'Produção de Eletricidade': 0.71,
+    'Fabricação de Cimento': 0.21,
+    'Commercial Real Estate - Residencial': 0.53,
+    'Commercial Real Estate - Serviços': 0.64
 }
 
 
@@ -66,6 +66,17 @@ def compute_emissions(year, res, key='simulation'):
     }
 
 
+def epc_scores(data, year):
+    return [
+        {
+            'score': epc_score,
+            'amount': sum([float(x.get('nominal_amount'))
+                           for x in data if x.get('nominal_amount')
+                           and x.get('epcScore') == epc_score
+                           and x.get('startDate') <= f"{year}-01-01" <= x.get('endDate')])
+        }
+        for epc_score in ['A', 'B', 'B-', 'C', 'D', 'E']]
+
 # def update_assets(db):
 #     fund_id = {
 #         'Commercial Real Estate - Residencial': 448,
@@ -122,7 +133,9 @@ def lambda_handler(event, context):
 
     # get the simulation assets
     res = event.select("""
-    SELECT F.isDraft, F.fund_name AS name, F.simulatedMainFundId, ID.*, A.name AS assetName, A.emissionsPerYearPerEuroTCO2, financial_industry, isClone
+    SELECT F.isDraft, F.fund_name AS name, F.simulatedMainFundId, ID.*, A.name AS assetName, A.emissionsPerYearPerEuroTCO2, financial_industry, isClone,
+           A.esgRiskScore,
+           A.epcScore
       FROM `schema`.main_fund F
       LEFT JOIN `schema`.investment_fund IVF
         ON IVF.main_fund_id = F.id
@@ -158,7 +171,9 @@ def lambda_handler(event, context):
     # get the actual assets
     actuals = event.select("""
     SELECT ID.*, A.name AS assetName,
-           A.emissionsPerYearPerEuroTCO2
+           A.emissionsPerYearPerEuroTCO2,
+           A.esgRiskScore,
+           A.epcScore
       FROM `schema`.investment_fund IVF
       LEFT JOIN `schema`.investment_detail ID
         ON ID.fund_id = IVF.id
@@ -215,11 +230,16 @@ def lambda_handler(event, context):
         {**x,
          'simulation': 100 - 100 * x.get('simulation') / simulation_emissions_original_simulation,
          'fund': 100 - 100 * x.get('fund') / simulation_emissions_original_fund,
+         'threshold': (-100 * threshold if x.get('year') >= 2030 and x.get('year') < 2050 else None) if x.get('year') in range(2030, 2050) else -100
          } for x in chart_data_emissions
     ]
 
+    for row in chart_data_percentage:
+        if row.get('year') < 2030:
+            del row['threshold']
+
     chart_data_emissions = [
-        {**x, 'threshold': threshold if x.get('year') < 2050 else 0} if x.get('year') >= 2030 and x.get('year') <= 2050 else x for x in chart_data_emissions
+        x for x in chart_data_emissions
     ]
 
     return {
@@ -247,5 +267,6 @@ def lambda_handler(event, context):
                 'fundValuePercentage': [x for x in chart_data_percentage if x.get('year') == 2050][0].get('fund'),
                 'threshold': 0
             }
-        }
+        },
+        'epcScore': {year: epc_scores(res, year) for year in range(2022, 2051)}
     }
