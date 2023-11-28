@@ -8,3 +8,5 @@ from edit_fund_helpers import *
 from fund_dictionaries import *
 from stock_helpers import *
 from simulator import *
+from environmental_helpers import *
+from query_metric_value import *
