@@ -73,6 +73,8 @@ def epc_scores(data, year):
             'amount': sum([float(x.get('nominal_amount'))
                            for x in data if x.get('nominal_amount')
                            and x.get('epcScore') == epc_score
+                           and x.get('startDate')
+                           and x.get('endDate')
                            and x.get('startDate') <= f"{year}-01-01" <= x.get('endDate')])
         }
         for epc_score in ['A', 'B', 'B-', 'C', 'D', 'E']]
@@ -228,8 +230,8 @@ def lambda_handler(event, context):
 
     chart_data_percentage = [
         {**x,
-         'simulation': 100 - 100 * x.get('simulation') / simulation_emissions_original_simulation,
-         'fund': 100 - 100 * x.get('fund') / simulation_emissions_original_fund,
+         'simulation': 100 - 100 * x.get('simulation') / simulation_emissions_original_simulation if simulation_emissions_original_simulation else 0,
+         'fund': 100 - 100 * x.get('fund') / simulation_emissions_original_fund if simulation_emissions_original_fund else 0,
          'threshold': (-100 * threshold if x.get('year') >= 2030 and x.get('year') < 2050 else None) if x.get('year') in range(2030, 2050) else -100
          } for x in chart_data_emissions
     ]
